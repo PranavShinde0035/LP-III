@@ -1,0 +1,25 @@
+// ✅ Recommended: Short and easy
+public class DAA4 {
+    public static void main(String[] args) {
+        int[] weight = {2, 3, 4, 5};
+        int[] profit = {3, 4, 5, 6};
+        int capacity = 5;
+        int n = weight.length;
+
+        int[][] dp = new int[n + 1][capacity + 1];
+
+        for (int i = 1; i <= n; i++) {
+            for (int w = 1; w <= capacity; w++) {
+                if (weight[i - 1] <= w)
+                    dp[i][w] = Math.max(
+                        profit[i - 1] + dp[i - 1][w - weight[i - 1]],
+                        dp[i - 1][w]
+                    );
+                else
+                    dp[i][w] = dp[i - 1][w];
+            }
+        }
+
+        System.out.println("Maximum Profit = " + dp[n][capacity]);
+    }
+}
