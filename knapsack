@@ -1,0 +1,46 @@
+// DAA Practical 3 - Fractional Knapsack Problem (using Profit)
+import java.util.*;
+
+class Item {
+    double weight, profit, ratio;
+    Item(double w, double p) {
+        weight = w;
+        profit = p;
+        ratio = p / w;
+    }
+}
+
+public class DAA3 {
+    public static void main(String[] args) {
+        double[] weight = {10, 40, 20, 30};
+        double[] profit = {60, 40, 100, 120};
+        double capacity = 50;
+
+        int n = weight.length;
+        Item[] items = new Item[n];
+        
+        for (int i = 0; i < n; i++)
+            items[i] = new Item(weight[i], profit[i]);
+
+        // Sort items in descending order of profit/weight ratio
+        Arrays.sort(items, (a, b) -> Double.compare(b.ratio, a.ratio));
+
+        double totalProfit = 0;
+        for (Item item : items) {
+            if (capacity >= item.weight) {
+                capacity -= item.weight;
+                totalProfit += item.profit;
+            } else {
+                totalProfit += item.ratio * capacity;
+                break;
+            }
+        }
+
+        System.out.println("Maximum Profit in Knapsack = " + totalProfit);
+    }
+}
+
+/*
+Time Complexity: O(n log n)
+Space Complexity: O(n)
+*/
