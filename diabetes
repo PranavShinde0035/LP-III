@@ -1,0 +1,38 @@
+import pandas as pd
+import numpy as np
+df=pd.read_csv(r"D:\Dataset\diabetes.csv")
+cols_to_fix = ['Glucose', 'BloodPressure', 'SkinThickness', 'Insulin', 'BMI']
+
+for col in cols_to_fix:
+    df[col] = df[col].replace(0, np.nan)
+    df[col] = df[col].fillna(df[col].mean())
+X = df.iloc[:, :8]   # first 8 columns = input features
+Y = df['Outcome']    # last column = target
+from sklearn.model_selection import train_test_split
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2, random_state=0)
+from sklearn.neighbors import KNeighborsClassifier
+knn = KNeighborsClassifier(n_neighbors=5)
+knn.fit(X_train, Y_train)
+knn_pred = knn.predict(X_test)
+
+results = pd.DataFrame({
+    "Actual": Y_test.values,
+    "Predicted": knn_pred
+})
+
+print(results.head(20))
+
+from sklearn.metrics import confusion_matrix, accuracy_score, precision_score, recall_score, f1_score
+cm = confusion_matrix(Y_test, knn_pred)
+accuracy = accuracy_score(Y_test, knn_pred)
+error_rate = 1 - accuracy
+precision = precision_score(Y_test, knn_pred)
+recall = recall_score(Y_test, knn_pred)
+f1 = f1_score(Y_test, knn_pred)
+
+print("Confusion Matrix:\n", cm)
+print("Accuracy:", accuracy)
+print("Error Rate:", error_rate)
+print("Precision:", precision)
+print("Recall:", recall)
+print("F1 Score:", f1)
